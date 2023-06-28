@@ -1,22 +1,24 @@
-CREATE DATABASE IF NOT EXISTS projecto_integrador;
-use projecto_integrador;
+CREATE DATABASE IF NOT EXISTS proyectov1;
+USE proyectov1;
 
-CREATE TABLE if not exists Estado (
-Id_Estado int,
-Operativo varchar(10),
-Low_battery varchar(10)
+CREATE TABLE IF NOT EXISTS Estado (
+    Id_Estado INT,
+    Operativo VARCHAR(10),
+    Low_battery VARCHAR(10)
 );
 
-CREATE TABLE if not exists DispositivosSRL(
-Number_serial int primary key not null,
-Modelo varchar(20) not null,
-Direccion_instalacion varchar(20) not null,
-Fehca_Instalacion DATE not null,
-Coordenadas varchar (20) not null,
-Id_Estado int not null,
-FOREIGN KEY(Id_Estado) REFERENCES DispositivosSRL(Number_serial)
+CREATE TABLE IF NOT EXISTS DispositivosSRL (
+    Number_serial INT PRIMARY KEY NOT NULL,
+    Modelo VARCHAR(20) NOT NULL,
+    Direccion_instalacion VARCHAR(20) NOT NULL,
+    Fecha_Instalacion DATE NOT NULL,
+    Coordenadas VARCHAR(20) NOT NULL,
+    Id_Estado INT NOT NULL,
+    FOREIGN KEY (Id_Estado) REFERENCES Estado (Id_Estado)
 );
+
 SHOW TABLES;
+
 
 
 
