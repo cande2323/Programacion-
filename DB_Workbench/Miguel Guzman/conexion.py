@@ -1,47 +1,59 @@
 import mysql.connector
 
-class Conexion:
-    def __init__(self, host, root, Root2013, projecto_integrador):
-        self.host = host
-        self.user = root
-        self.password = Root2013
-        self.database = projecto_integrador
-        self.connection = None
+# Conectarse a la base de datos
+db = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="Root2013",
+  database="proyectov1"
+)
 
-    def connect(self):
-        self.connection = mysql.connector.connect(
-            host=self.host,
-            root=self.user,
-            Root2013=self.password,
-            project_integrador=self.database
-        )
-        if self.connection.is_connected():
-            print("Conexión exitosa")
+# Método para actualizar un dispositivo
+def actualizar_dispositivo(Modelo, Numero_Serial, Direccion_Instalacion, Fecha_Instalacion, Coordenadas, Id_Estado):
+    cursor = db.cursor()
+    sql = "UPDATE Dispositivos SET ModeloId=%s, EstadoId=%s, NumeroSerie=%s, DireccionInstalacion=%s, FechaInstalacion=%s, Coordenadas=%s WHERE Id=%s"
+    values = (Modelo, Numero_Serial, Direccion_Instalacion, Fecha_Instalacion, Coordenadas, Id_Estado)
+    cursor.execute(sql, values)
+    db.commit()
+    print("Dispositivo actualizado correctamente")
 
-    def disconnect(self):
-        if self.connection.is_connected():
-            self.connection.close()
-            print("Desconexión")
+# Método para eliminar un dispositivo
+def eliminar_dispositivo(id):
+    cursor = db.cursor()
+    sql = "DELETE FROM Dispositivos WHERE Id=%s"
+    value = (Modelo,)
+    cursor.execute(sql, value)
+    db.commit()
+    print("Dispositivo eliminado correctamente")
 
-    def leer_dispositivossrl(self):
-        if self.connection.is_connected():
-            cursor = self.connection.cursor()
-            query = "SELECT * FROM projecto_integrador"
-            cursor.execute(query)
-            dispositivossrl = cursor.fetchall()
-            cursor.close()
-            return dispositivossrl
-        else:
-            print("No hay conexión a la base de datos")
+# Método para mostrar el menú
+def mostrar_menu():
+    print("------- MENÚ -------")
+    print("1. Actualizar dispositivo")
+    print("2. Eliminar dispositivo")
+    print("3. Salir")
+    print("--------------------")
 
-    def ingresar_projecto_integrador(self, Number_serial, Modelo, Direccion_Instalacion, Fecha_Instalacion, Coordenadas, Id_Estado):
-        if self.connection.is_connected():
-            cursor = self.connection.cursor()
-            query = "INSERT INTO projecto_integrador (Number_serial, Modelo, Direccion_Instalacion, Fecha_Instalacion, Coordenadas, Id_Estado) VALUES (%s, %s, %s, %s)"
-            values = (Number_serial, Modelo, Direccion_Instalacion, Fecha_Instalacion, Coordenadas, Id_Estado)
-            cursor.execute(query, values)
-            self.connection.commit()
-            cursor.close()
-            print("Datos insertados correctamente")
-        else:
-            print("No hay conexión a la base de datos")
+# Ciclo principal del programa
+while True:
+    mostrar_menu()
+    opcion = input("Ingrese una opción: ")
+
+    if opcion == "1":
+        Modelo = int(input("Ingrese el nuevo ID del modelo: "))
+        Id_Estado = int(input("Ingrese el nuevo ID del estado: "))
+        Numero_Serial = input("Ingrese el nuevo número de serie: ")
+        Direccion_Instalacion = input("Ingrese la nueva dirección de instalación: ")
+        Fecha_Instalacion = input("Ingrese la nueva fecha de instalación (YYYY-MM-DD): ")
+        Coordenadas = input("Ingrese las nuevas coordenadas: ")
+        actualizar_dispositivo(Modelo, Numero_Serial, Direccion_Instalacion, Fecha_Instalacion, Coordenadas)
+    elif opcion == "2":
+        Modelo = int(input("Ingrese el ID del dispositivo a eliminar: "))
+        eliminar_dispositivo(Modelo)
+    elif opcion == "3":
+        break
+    else:
+        print("Opción inválida. Por favor, ingrese una opción válida.")
+
+# Cerrar la conexión a la base de datos
+db.close()
